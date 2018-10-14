@@ -1,20 +1,22 @@
-def is_valid_input(index):
+def is_float_or_negative(index):
+    if type(index) is float or index < 0:
+        return True
+    return False
+
+
+def is_not_number(index):
     try:
         int(index)
         return True
     except ValueError:
         return False
 
+def fib(index):
+    if is_not_number(index):
+        if not is_float_or_negative(index):
+            return 1 if index in (0, 1, 2) \
+                else fib(index - 1) + fib(index - 2)
+        raise ValueError('Cannot input non integer items')
+    raise ValueError('Cannot input none characters')
 
-def fibonacci(index):
-    if is_valid_input(index):
-        if index < 0 or type(index) is float:
-            return -1
-        else:
-            if index == 0 or index == 1 or index == 2:
-                return 1
-            else:
-                return fibonacci(index - 1) + fibonacci(index - 2)
-    else:
-        raise ValueError('Cannot input none integer items')
 
