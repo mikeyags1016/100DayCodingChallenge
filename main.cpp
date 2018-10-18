@@ -9,9 +9,8 @@
 #include <iostream>
 #include <random>
 #include <time.h>
+#include <cmath>
 using namespace std;
-
-int arr[20000];
 
 void swap(int *i, int *j)
 {
@@ -31,7 +30,7 @@ void bubble_sort(int *list, int size)
             //If j is bigger than the next element, swap
             if (list[j] > list[j + 1])
             {
-                swap(&arr[j], &arr[j + 1]);
+                swap(&list[j], &list[j + 1]);
             }
         }
     }
@@ -65,6 +64,65 @@ void selection_sort(int *list, int size)
     }
 }
 
+void merge(int *list, int left, int middle, int right)
+{
+    int i, j, k, temp[right - left + 1];
+    
+    //Merge the lists together into combined list
+    //based off of which element is smaller
+    i = left;
+    j = middle + 1;
+    k = 0;
+
+    while (i <= middle && j <= right)
+    {
+        if (list[i] < list[j])
+        {
+            temp[k] = list[i];
+            i++;
+        }
+        else
+        {
+            temp[k] = list[j];
+            j++;
+        }
+        k++;
+    }
+    
+    //Put remaining elements into list
+    while (i <= middle)
+    {
+        temp[k] = list[i];
+        i++;
+        k++;
+    }
+    while (j <= right)
+    {
+        temp[k] = list[j];
+        j++;
+        k++;
+    }
+    
+    //Assign elements of the temp into the list
+    for (i = left; i <= right; i++)
+    {
+        list[i] = temp[i - left];
+    }
+}
+
+void merge_sort(int *list, int left, int right)
+{
+    //While there are still elements in the list
+    if (left < right)
+    {
+        //Find the middle and split the list in half
+        int middle = (right + left) / 2;
+        merge_sort(list, left, middle);
+        merge_sort(list, middle + 1, right);
+        merge(list, left, middle, right);
+    }
+}
+
 void print(int *arr, int size)
 {
     for (int i = 0; i < size; i++)
@@ -75,16 +133,17 @@ void print(int *arr, int size)
 }
 
 int main(int argc, const char * argv[]) {
-    int n = (sizeof(arr)/sizeof(*arr));
+    int arr[100000];
+    int n = (sizeof(arr)/sizeof(arr[0]));
     
-    for (int i = 0; i < 20000; i++)
+    for (int i = 0; i < n; i++)
     {
         arr[i] = rand() % 100 + 1;
     }
     
     time_t start = time(0);
     
-    selection_sort(arr, n);
+    merge_sort(arr, 0, n-1);
     print(arr, n);
     
     double seconds_since_start = difftime( time(0), start);
