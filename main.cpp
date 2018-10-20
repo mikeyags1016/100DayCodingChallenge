@@ -36,6 +36,26 @@ void bubble_sort(int *list, int size)
     }
 }
 
+void insertion_sort(int *list, int size)
+{
+    //Loop through entire list
+    for (int i = 1; i < size; i++)
+    {
+        int key = list[i];
+        int j = i - 1;
+        
+        //Move elements of list that are greater
+        //than key to one position ahead of their
+        //current position
+        while (j >= 0 && list[j] > key)
+        {
+            list[j + 1] = list[j];
+            j--;
+        }
+        list[j + 1] = key;
+    }
+}
+
 void selection_sort(int *list, int size)
 {
     //Loop through entire list
@@ -151,6 +171,10 @@ int partition(int *list, int left, int right)
 void quick_sort(int *list, int left, int right)
 {
     //While there is more than one element in the list
+    if (left < right && sizeof(list)/sizeof(list[0]) <= 20)
+    {
+        insertion_sort(list, sizeof(list)/sizeof(list[0]));
+    }
     if (left < right)
     {
         //Return the pivot after partitioning for two halves
@@ -171,7 +195,7 @@ void print(int *arr, int size)
 }
 
 int main(int argc, const char * argv[]) {
-    int arr[100000];
+    int arr[2000];
     int n = (sizeof(arr)/sizeof(arr[0]));
     
     for (int i = 0; i < n; i++)
@@ -181,7 +205,7 @@ int main(int argc, const char * argv[]) {
     
     time_t start = time(0);
     
-    selection_sort(arr, n-1);
+    quick_sort(arr, 0, n-1);
     
     double seconds_since_start = difftime(time(0), start);
     print(arr, n);
