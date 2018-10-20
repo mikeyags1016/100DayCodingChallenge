@@ -1,151 +1,51 @@
-//
-//  main.cpp
-//  list sorter
-//
-//  Created by Michael A on 10/16/18.
-//  Copyright © 2018 Michael A. All rights reserved.
-//
-
-#include <iostream>
-#include <random>
 #include <time.h>
+#include <iostream>
+#include <map>
+#include <unistd.h>
 #include <cmath>
 using namespace std;
 
-void swap(int *i, int *j)
+string stage(int section)
 {
-    int temp = *i;
-    *i = *j;
-    *j = temp;
+    map<int, string> stages;
+    
+    stages[1] = "Seed";
+    stages[2] = "Sapling";
+    stages[3] = "Child";
+    stages[4] = "Young Adult";
+    stages[5] = "Grown Evergreen";
+    stages[6] = "Grandfather tree";
+    
+    if (section > 6)
+        return "Invalid Input";
+    return stages[section];
 }
 
-void bubble_sort(int *list, int size)
+void timer(int max_time, int sections)
 {
-    //Loop through entire list
-    for (int i = 0; i < size - 1; i++)
+    clock_t start = time(0);
+    double seconds = 0;
+    int section_number = 0;
+    
+    while (seconds < max_time)
     {
-        //For each element, loop through the rest of the elements
-        for (int j = 0; j < size - i - 1; j++)
-        {
-            //If j is bigger than the next element, swap
-            if (list[j] > list[j + 1])
-            {
-                swap(&list[j], &list[j + 1]);
-            }
-        }
-    }
-}
-
-void selection_sort(int *list, int size)
-{
-    //Loop through entire list
-    for (int i = 0; i < size - 1; i++)
-    {
-        //Set current element to i
-        int smallest = i;
+        seconds = difftime(time(0), start);
+        section_number++;
         
-        //Loop through rest of list
-        for (int j = i + 1; j < size; j++)
-        {
-            //If current element is smaller than the current smallest,
-            //set current to smallest
-            if (list[j] < list[smallest])
-            {
-                smallest = j;
-            }
-            //When you have gone through the entire list,
-            //swap the old smallest (i) with the current smallest
-            //if they aren't equal
-            if (smallest != i)
-            {
-                swap(&list[smallest], &list[i]);
-            }
-        }
+        cout << "Stage of tree: " << stage(section_number) << ", seconds: " << seconds << endl;
+        sleep(sections);
     }
 }
 
-void merge(int *list, int left, int middle, int right)
+void tree_counter(int max_time)
 {
-    int i, j, k, temp[right - left + 1];
-    
-    //Merge the lists together into combined list
-    //based off of which element is smaller
-    i = left;
-    j = middle + 1;
-    k = 0;
-
-    while (i <= middle && j <= right)
-    {
-        if (list[i] < list[j])
-        {
-            temp[k] = list[i];
-            i++;
-        }
-        else
-        {
-            temp[k] = list[j];
-            j++;
-        }
-        k++;
-    }
-    
-    //Put remaining elements into list
-    while (i <= middle)
-    {
-        temp[k] = list[i];
-        i++;
-        k++;
-    }
-    while (j <= right)
-    {
-        temp[k] = list[j];
-        j++;
-        k++;
-    }
-    
-    //Assign elements of the temp into the list
-    for (i = left; i <= right; i++)
-    {
-        list[i] = temp[i - left];
-    }
+    int section_times = round(max_time / 5);
+    timer(max_time, section_times);
+    cout << "Congratulations, you have completed your time!" << endl;
 }
 
-void merge_sort(int *list, int left, int right)
+int main()
 {
-    //While there are still elements in the list
-    if (left < right)
-    {
-        //Find the middle and split the list in half
-        int middle = (right + left) / 2;
-        merge_sort(list, left, middle);
-        merge_sort(list, middle + 1, right);
-        merge(list, left, middle, right);
-    }
-}
-
-void print(int *arr, int size)
-{
-    for (int i = 0; i < size; i++)
-    {
-        cout << arr[i] << ", ";
-    }
-    cout << endl;
-}
-
-int main(int argc, const char * argv[]) {
-    int arr[100000];
-    int n = (sizeof(arr)/sizeof(arr[0]));
-    
-    for (int i = 0; i < n; i++)
-    {
-        arr[i] = rand() % 100 + 1;
-    }
-    
-    time_t start = time(0);
-    
-    merge_sort(arr, 0, n-1);
-    print(arr, n);
-    
-    double seconds_since_start = difftime( time(0), start);
-    cout << seconds_since_start << " s" << endl;
+    tree_counter(60);
+    return 0;
 }
