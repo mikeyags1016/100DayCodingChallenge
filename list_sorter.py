@@ -1,10 +1,10 @@
 import random
 import time
-import statistics
+
 
 # Driver code for non-tests
 arr = []
-for i in range(30000):
+for i in range(10000):
     arr.append(random.randrange(1, 101))
 
 
@@ -127,7 +127,9 @@ def partition(arr, left, right):
 
 def quick_sort_helper(arr, left, right):
     # If there is more than one element in the list
-    if left < right:
+    if left < right and len(arr) <= 20:
+        insertion_sort(arr)
+    elif left < right:
         # Return pivot after partitioning for two halves
         p = partition(arr, left, right)
 
