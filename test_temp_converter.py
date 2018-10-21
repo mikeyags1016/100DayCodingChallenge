@@ -23,6 +23,7 @@ class TestTempConverter(unittest.TestCase):
             self.temp.convert_to_fahrenheit(100, 'f')
             self.temp.convert_to_celcius(100, 'c')
             self.temp.convert_to_kelvin(100, 'f')
+            self.temp.convert_to_kelvin('A', 'f')
 
 
 if __name__ == "__main__":
